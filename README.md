@@ -62,7 +62,7 @@ The design is built for **large, high-quality photography** and is ready for rea
 To add real photos, simply drop correctly-named files into these folders (no code changes needed):
 
 - `images/hero/hero-home.jpg`, `images/hero/service-area-map.jpg`
-- `images/services/engine-service.jpg`, `generator-service.jpg`, `electrical-systems.jpg`, `fuel-systems.jpg`, `marine-plumbing.jpg`, `sanitation-systems.jpg`, `hydraulic-steering.jpg`, `preventative-maintenance.jpg`
+- `images/services/engine-service.jpg`, `generator-service.jpg`, `electrical-systems.jpg`, `marine-plumbing.jpg`, `sanitation-systems.jpg`, `hydraulic-steering.jpg`, `preventative-maintenance.jpg`
 - `images/about/team-photo.jpg`, `technician-at-work.jpg`
 - `images/gallery/engine-01.jpg` through `engine-04.jpg`, `generator-01.jpg`/`02.jpg`, `electrical-01.jpg`/`02.jpg`, `vessel-01.jpg`–`03.jpg`, `maintenance-01.jpg`
 
@@ -76,43 +76,39 @@ To add real photos, simply drop correctly-named files into these folders (no cod
 
 - **Responsive, mobile-first design** with a slide-in mobile menu and a sticky mobile call/request bar (hidden on desktop).
 - **Smooth scrolling** to in-page anchors (e.g. `services.html#engine`).
-- **Client-side form validation** on the Contact page (name, phone, email format, and issue description) with inline error messages — no page reload required. The form currently shows a success message on valid submit; wire it to a real backend (see below) before launch.
+- **Request Service**: every "Request Service" button/link sitewide goes to the Contact page's online form (name, phone, email, boat make/model, engine type, description of issue). On submit, `send-request.php` emails the details to you automatically — no PDF, no manual step for the customer.
 - **Gallery filtering + lightbox** with no external libraries.
 - **SEO**: unique `<title>`/meta description per page, targeted keywords, canonical tags, Open Graph tags, and JSON-LD structured data (`AutomotiveBusiness`, `AggregateRating`/`Review`, service-area cities).
 - **Accessibility basics**: skip-to-content link, semantic headings, `aria-*` attributes on the nav toggle and current-page link, focus-visible states.
 - **Performance**: no external font/JS/CSS requests (system font stack + vanilla JS), a single small stylesheet and script shared across all pages (cached after first page load), lazy-loaded images.
 
-## Connecting the contact form to a real backend
+## The Request Service form (GoDaddy hosting + PHP)
 
-`js/main.js` currently intercepts the form submit, validates it, and shows a success message — **it does not send data anywhere yet**. Pick one:
+The Contact page form (`contact.html`, `id="service-request-form"`) submits to **`send-request.php`** at the site root, which validates the fields server-side and emails the submission using PHP's built-in `mail()` function — no third-party service, no Netlify-specific features, works because GoDaddy's standard hosting plans include PHP.
 
-1. **Netlify Forms** (if hosting on Netlify): add `data-netlify="true"` and a hidden `form-name` input to the `<form id="service-request-form">` in `contact.html` — no JS changes needed.
-2. **Formspree / similar form API**: point the form's `action` to your Formspree endpoint and let it submit natively, or replace the `fetch`-free stub in `main.js`'s submit handler with an actual `fetch(...)` call to your endpoint.
-3. **Custom backend**: replace the comment block in `main.js` (search for "No backend is wired up yet") with a `fetch()` call to your API.
+- **Destination email**: set at the top of `send-request.php` — `$to = "flyingyacht@aol.com";`. To change it later, edit that one line (no other files need touching).
+- **Spam protection**: a hidden "website" field acts as a honeypot — real visitors never see or fill it (it's positioned off-screen), so if it arrives filled in, the script silently discards the submission as a bot.
+- **Validation**: happens twice — in the browser (`js/main.js`, for instant feedback) and again in `send-request.php` (since client-side checks can always be bypassed), so a submission is only emailed if it passes both.
+
+**Testing after deploy**: submit the form once yourself on the live site and confirm the email arrives. If it doesn't:
+- Check your GoDaddy hosting plan's spam/junk folder for the destination inbox first — `mail()` sends from `no-reply@universalmarineservice.com`, and depending on your plan's mail configuration this may need to be an address GoDaddy recognizes as belonging to your hosting account/domain for reliable delivery.
+- If delivery is inconsistent, GoDaddy hosting support can confirm whether your plan needs SMTP authentication instead of the plain `mail()` function — if so, `send-request.php` would need to be updated to use PHPMailer or a similar SMTP library instead of `mail()`.
 
 ## Deployment instructions
 
-### Option A — Netlify (recommended, free, fastest)
-1. Create a free account at netlify.com.
-2. Drag and drop this entire project folder onto the Netlify "Deploys" page, **or** connect it to a Git repository for automatic deploys.
-3. Add your custom domain under Site settings → Domain management.
-4. If using Netlify Forms for the contact form, add `data-netlify="true"` to the form tag as described above.
-
-### Option B — GitHub Pages
-1. Push this folder to a GitHub repository.
-2. In the repo settings, enable GitHub Pages, serving from the `main` branch root.
-3. Map your custom domain via a `CNAME` file if desired.
-
-### Option C — Traditional web hosting (cPanel / FTP)
-1. Upload the entire contents of this folder (all `.html` files, `css/`, `js/`, `images/`) to your host's `public_html` (or equivalent) directory via FTP/SFTP or the hosting file manager.
-2. Ensure `index.html` is at the site root so it loads at your domain's homepage.
-3. No server-side configuration, database, or build step is required — this is a fully static site.
+### GoDaddy Web Hosting (cPanel / FTP)
+1. Log into your GoDaddy hosting account and open the **File Manager** (or connect via FTP/SFTP using the credentials in your hosting dashboard).
+2. Upload the entire contents of this folder — all `.html` files, `send-request.php`, `css/`, `js/`, `images/` — into your hosting account's web root (commonly `public_html`).
+3. Ensure `index.html` ends up directly in the web root (not nested in a subfolder) so it loads at `universalmarineservice.com`.
+4. No build step or database is needed — everything here is static files plus the one PHP script, which GoDaddy's standard hosting runs automatically.
+5. Since your domain is already registered and hosted at GoDaddy, no separate DNS/domain-connection step is needed — once the files are uploaded, the live domain should serve the new site directly.
 
 ### Before/after launch checklist
 - [ ] Replace all placeholder contact details, address, and map embeds (see above)
 - [ ] Add real photography to `images/`
 - [ ] Replace placeholder testimonials/ratings with real reviews
-- [ ] Connect the contact form to a real backend
+- [ ] Upload `send-request.php` along with the rest of the site, and confirm `$to` in that file has the correct destination email
+- [ ] Submit a real test request on the live site and confirm the email arrives (see testing notes above)
 - [ ] Update canonical/Open Graph URLs to your live domain
 - [ ] Run [Google Lighthouse](https://pagespeed.web.dev/) and [Google's Rich Results Test](https://search.google.com/test/rich-results) against the live site
 - [ ] Submit the site to Google Search Console and request indexing

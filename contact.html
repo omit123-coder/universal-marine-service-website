@@ -59,7 +59,11 @@
         <div class="form-success" id="form-success">
           Thank you! Your request has been received. Our team will contact you shortly to confirm your appointment.
         </div>
-        <form class="form-card" id="service-request-form" novalidate>
+        <form class="form-card" id="service-request-form" action="send-request.php" method="POST" novalidate>
+          <p style="position:absolute; left:-9999px;" aria-hidden="true">
+            <label>Leave this field blank: <input name="website" tabindex="-1" autocomplete="off"></label>
+          </p>
+
           <h2 style="margin-bottom:6px;">Request Service</h2>
           <p style="color:var(--gray-500); margin-bottom:24px; font-size:0.95rem;">Fields marked <span class="req">*</span> are required.</p>
 
@@ -184,7 +188,6 @@
         <ul>
           <li><a href="services.html#engine">Engine Service</a></li>
           <li><a href="services.html#generator">Generator Service</a></li>
-          <li><a href="services.html#fuel">Fuel Systems</a></li>
           <li><a href="services.html#maintenance">Preventative Maintenance</a></li>
         </ul>
       </div>

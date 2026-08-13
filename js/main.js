@@ -83,7 +83,7 @@
     }
   });
 
-  /* ---------- Contact / Request-Service form validation ---------- */
+  /* ---------- Contact / Request-Service form (PHP mail handler) ---------- */
   var form = document.getElementById("service-request-form");
   if (form) {
     var successBox = document.getElementById("form-success");
@@ -140,12 +140,26 @@
         return;
       }
 
-      /* No backend is wired up yet — replace this block with a real fetch()
-         call to your form endpoint (e.g. Formspree, Netlify Forms, or a
-         custom API) when one is available. */
-      form.style.display = "none";
-      if (successBox) successBox.classList.add("show");
-      successBox && successBox.scrollIntoView({ behavior: "smooth", block: "center" });
+      var submitBtn = form.querySelector("button[type=submit]");
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Submitting…"; }
+
+      fetch(form.getAttribute("action"), {
+        method: "POST",
+        body: new FormData(form)
+      })
+        .then(function (response) { return response.json().then(function (data) { return { ok: response.ok, data: data }; }); })
+        .then(function (result) {
+          if (!result.ok || !result.data.success) throw new Error("Submission failed");
+          form.style.display = "none";
+          if (successBox) {
+            successBox.classList.add("show");
+            successBox.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        })
+        .catch(function () {
+          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Submit Service Request"; }
+          alert("Sorry, something went wrong submitting your request. Please call or email us directly.");
+        });
     });
   }
 
