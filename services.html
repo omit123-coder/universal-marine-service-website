@@ -21,7 +21,7 @@
   <div class="container nav-wrap">
     <a href="index.html" class="brand">
       <span class="brand-mark" aria-hidden="true"><img src="images/logo/logo.jpg" alt=""></span>
-      <span class="brand-text">Universal Marine Service<small>Engine &amp; Systems Specialists</small></span>
+      <span class="brand-text">Universal Marine Service<small>Engine &amp; Systems Specialists</small><small>Serving SWFL for 30 Years</small></span>
     </a>
     <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
     <nav class="main-nav" id="main-nav" aria-label="Primary">
@@ -36,7 +36,7 @@
       </ul>
       <div class="nav-actions">
         <a href="tel:+12392461618" class="nav-phone"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>239-246-1618</a>
-        <a href="contact.html" class="btn btn-primary">Request Service</a>
+        <a href="contact.html#request-form" class="btn btn-primary">Request Service</a>
       </div>
     </nav>
   </div>
@@ -82,7 +82,6 @@
           <p>Reliable power on board matters — for air conditioning, appliances, and electronics. We service, repair, and install marine generators of all major brands and sizes.</p>
           <ul class="check-list">
             <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Generator diagnostics and repair</li>
-            <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>New generator sizing &amp; installation</li>
             <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Impeller, coolant, and exhaust service</li>
             <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Load testing and annual service plans</li>
           </ul>
@@ -183,9 +182,130 @@
         <h2>Not Sure What Your Vessel Needs?</h2>
         <p>Tell us what's going on and our team will recommend the right service — no guesswork, no upselling.</p>
         <div class="cta-row">
-          <a href="contact.html" class="btn btn-primary btn-lg">Request Service</a>
+          <a href="#request-form" class="btn btn-primary btn-lg">Request Service</a>
           <a href="tel:+12392461618" class="btn btn-secondary btn-lg">Call 239-246-1618</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="request-form">
+    <div class="container">
+      <div class="section-head center">
+        <span class="eyebrow">Ready When You Are</span>
+        <h2>Request Service Online</h2>
+        <p>Fill out the form below and it goes straight to our team — no PDF, no phone tag required.</p>
+      </div>
+      <div class="reveal" style="max-width:720px; margin-inline:auto;">
+        <div class="form-success" id="form-success">
+          Thank you! Your request has been received. Our team will contact you shortly to confirm your appointment.
+        </div>
+        <form class="form-card" id="service-request-form" action="send-request.php" method="POST" novalidate>
+          <p style="position:absolute; left:-9999px;" aria-hidden="true">
+            <label>Leave this field blank: <input name="website" tabindex="-1" autocomplete="off"></label>
+          </p>
+
+          <h2 style="margin-bottom:6px;">Service Request Form</h2>
+          <p style="color:var(--gray-500); margin-bottom:24px; font-size:0.95rem;">Fields marked <span class="req">*</span> are required.</p>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="svc-vessel-name">Vessel Name</label>
+              <input type="text" id="svc-vessel-name" name="vesselName" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="svc-request-date">Date</label>
+              <input type="date" id="svc-request-date" name="requestDate" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="svc-customer-name">Customer Name <span class="req">*</span></label>
+              <input type="text" id="svc-customer-name" name="customerName" required autocomplete="name">
+              <p class="error-msg">Please enter your name.</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="svc-address">Address</label>
+              <input type="text" id="svc-address" name="address" autocomplete="street-address">
+            </div>
+          </div>
+
+          <div class="form-row three">
+            <div class="field">
+              <label for="svc-city">City</label>
+              <input type="text" id="svc-city" name="city" autocomplete="address-level2">
+            </div>
+            <div class="field">
+              <label for="svc-state">State</label>
+              <input type="text" id="svc-state" name="state" autocomplete="address-level1">
+            </div>
+            <div class="field">
+              <label for="svc-zip">Zip</label>
+              <input type="text" id="svc-zip" name="zip" autocomplete="postal-code">
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="svc-phone">Phone <span class="req">*</span></label>
+              <input type="tel" id="svc-phone" name="phone" required autocomplete="tel" placeholder="(239) 000-0000">
+              <p class="error-msg">Please enter a valid phone number.</p>
+            </div>
+            <div class="field">
+              <label for="svc-email">Email <span class="req">*</span></label>
+              <input type="email" id="svc-email" name="email" required autocomplete="email" placeholder="you@example.com">
+              <p class="error-msg">Please enter a valid email address.</p>
+            </div>
+          </div>
+
+          <div class="form-row three">
+            <div class="field">
+              <label for="svc-vessel-manufacturer">Vessel Manufacturer</label>
+              <input type="text" id="svc-vessel-manufacturer" name="vesselManufacturer" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="svc-vessel-model">Model</label>
+              <input type="text" id="svc-vessel-model" name="vesselModel" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="svc-vessel-year">Year</label>
+              <input type="text" id="svc-vessel-year" name="vesselYear" autocomplete="off" inputmode="numeric">
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="svc-length">Length</label>
+              <input type="text" id="svc-length" name="length" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="svc-hull-number">Hull #</label>
+              <input type="text" id="svc-hull-number" name="hullNumber" autocomplete="off">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="svc-vessel-location">Location of Vessel</label>
+              <input type="text" id="svc-vessel-location" name="vesselLocation" autocomplete="off" placeholder="e.g. marina name and slip number">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="svc-issue">Description of Problem/Work Request <span class="req">*</span></label>
+              <textarea id="svc-issue" name="issue" required placeholder="Tell us what's happening with your vessel&hellip;"></textarea>
+              <p class="error-msg">Please provide a few details (at least 10 characters).</p>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg">Submit Service Request</button>
+          <p class="form-note">By submitting, you agree to be contacted by phone or email regarding your service request. We never share your information with third parties.</p>
+        </form>
       </div>
     </div>
   </section>
@@ -225,9 +345,9 @@
       <div>
         <h4>Contact</h4>
         <ul>
-          <li>4546 Orange Grove Blvd<br>North Fort Myers, FL 33903</li>
+          <li>17839 Courtside Landings Circle<br>Punta Gorda, FL 33955</li>
           <li><a href="tel:+12392461618">239-246-1618</a></li>
-          <li><a href="mailto:flyingyacht@aol.com">flyingyacht@aol.com</a></li>
+          <li><a href="mailto:JosephPmuia@gmail.com">JosephPmuia@gmail.com</a></li>
           <li>Mon&ndash;Fri: 8:00 AM &ndash; 5:00 PM<br>Sat: By Appointment</li>
         </ul>
       </div>
@@ -241,7 +361,7 @@
 
 <div class="mobile-call-bar">
   <a href="tel:+12392461618" class="call">Call Now</a>
-  <a href="contact.html" class="request">Request Service</a>
+  <a href="contact.html#request-form" class="request">Request Service</a>
 </div>
 
 <script src="js/main.js"></script>

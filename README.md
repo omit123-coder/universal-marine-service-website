@@ -46,8 +46,8 @@ A complete, production-ready, mobile-first website for Universal Marine Service 
 This site ships with realistic placeholder business details so every page is complete and functional. **Replace all of the following before going live:**
 
 - **Phone**: `239-246-1618` — already updated site-wide.
-- **Email**: `flyingyacht@aol.com` — already updated site-wide.
-- **Address**: `4546 Orange Grove Blvd, North Fort Myers, FL 33903` — already updated site-wide, including the JSON-LD schema in `index.html`, `service-areas.html`, and `reviews.html`.
+- **Email**: `JosephPmuia@gmail.com` — already updated site-wide.
+- **Address**: `17839 Courtside Landings Circle, Punta Gorda, FL 33955` — already updated site-wide, including the JSON-LD schema in `index.html` and the Google Maps embed on `contact.html`.
 - **Business hours** — footer and contact page.
 - **Google Maps embeds** — `contact.html` and `service-areas.html` currently embed a generic query-based map (`https://www.google.com/maps?q=...&output=embed`) for the placeholder address. Once you have a real address, update the `q=` parameter, or generate an exact embed code from Google Maps ("Share" → "Embed a map") for a precise pin.
 - **Social links** (`#` placeholders in the footer) — point to your real Facebook/Instagram profiles, or remove the icons.
@@ -86,7 +86,7 @@ To add real photos, simply drop correctly-named files into these folders (no cod
 
 The Contact page form (`contact.html`, `id="service-request-form"`) submits to **`send-request.php`** at the site root, which validates the fields server-side and emails the submission using PHP's built-in `mail()` function — no third-party service, no Netlify-specific features, works because GoDaddy's standard hosting plans include PHP.
 
-- **Destination email**: set at the top of `send-request.php` — `$to = "flyingyacht@aol.com";`. To change it later, edit that one line (no other files need touching).
+- **Destination email**: set at the top of `send-request.php` — `$to = "JosephPmuia@gmail.com";`. To change it later, edit that one line (no other files need touching).
 - **Spam protection**: a hidden "website" field acts as a honeypot — real visitors never see or fill it (it's positioned off-screen), so if it arrives filled in, the script silently discards the submission as a bot.
 - **Validation**: happens twice — in the browser (`js/main.js`, for instant feedback) and again in `send-request.php` (since client-side checks can always be bypassed), so a submission is only emailed if it passes both.
 

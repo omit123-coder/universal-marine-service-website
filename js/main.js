@@ -89,7 +89,7 @@
     var successBox = document.getElementById("form-success");
 
     var validators = {
-      name: function (v) { return v.trim().length >= 2; },
+      customerName: function (v) { return v.trim().length >= 2; },
       phone: function (v) { return /^[0-9()+\-.\s]{7,20}$/.test(v.trim()); },
       email: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); },
       issue: function (v) { return v.trim().length >= 10; }
@@ -103,6 +103,11 @@
     }
 
     function validateField(field) {
+      if (field.type === "checkbox") {
+        var checkOk = !field.hasAttribute("required") || field.checked;
+        setError(field, !checkOk);
+        return checkOk;
+      }
       var rule = validators[field.name];
       if (!rule) {
         if (field.hasAttribute("required")) {
@@ -112,9 +117,9 @@
         }
         return true;
       }
-      var ok = rule(field.value);
-      setError(field, !ok);
-      return ok;
+      var ok2 = rule(field.value);
+      setError(field, !ok2);
+      return ok2;
     }
 
     Array.prototype.forEach.call(form.elements, function (field) {

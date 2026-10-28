@@ -21,7 +21,7 @@
   <div class="container nav-wrap">
     <a href="index.html" class="brand">
       <span class="brand-mark" aria-hidden="true"><img src="images/logo/logo.jpg" alt=""></span>
-      <span class="brand-text">Universal Marine Service<small>Engine &amp; Systems Specialists</small></span>
+      <span class="brand-text">Universal Marine Service<small>Engine &amp; Systems Specialists</small><small>Serving SWFL for 30 Years</small></span>
     </a>
     <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav"><span></span><span></span><span></span></button>
     <nav class="main-nav" id="main-nav" aria-label="Primary">
@@ -36,7 +36,7 @@
       </ul>
       <div class="nav-actions">
         <a href="tel:+12392461618" class="nav-phone"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>239-246-1618</a>
-        <a href="contact.html" class="btn btn-primary">Request Service</a>
+        <a href="contact.html#request-form" class="btn btn-primary">Request Service</a>
       </div>
     </nav>
   </div>
@@ -52,7 +52,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="request-form">
     <div class="container grid grid-2" style="gap:56px; align-items:flex-start;">
 
       <div class="reveal">
@@ -64,58 +64,99 @@
             <label>Leave this field blank: <input name="website" tabindex="-1" autocomplete="off"></label>
           </p>
 
-          <h2 style="margin-bottom:6px;">Request Service</h2>
+          <h2 style="margin-bottom:6px;">Service Request Form</h2>
           <p style="color:var(--gray-500); margin-bottom:24px; font-size:0.95rem;">Fields marked <span class="req">*</span> are required.</p>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="vessel-name">Vessel Name</label>
+              <input type="text" id="vessel-name" name="vesselName" autocomplete="off">
+            </div>
+          </div>
 
           <div class="form-row two">
             <div class="field">
-              <label for="name">Full Name <span class="req">*</span></label>
-              <input type="text" id="name" name="name" required autocomplete="name">
-              <p class="error-msg">Please enter your name.</p>
+              <label for="request-date">Date</label>
+              <input type="date" id="request-date" name="requestDate" autocomplete="off">
             </div>
             <div class="field">
-              <label for="phone">Phone Number <span class="req">*</span></label>
-              <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="(239) 000-0000">
-              <p class="error-msg">Please enter a valid phone number.</p>
+              <label for="customer-name">Customer Name <span class="req">*</span></label>
+              <input type="text" id="customer-name" name="customerName" required autocomplete="name">
+              <p class="error-msg">Please enter your name.</p>
             </div>
           </div>
 
           <div class="form-row">
             <div class="field">
-              <label for="email">Email Address <span class="req">*</span></label>
+              <label for="address">Address</label>
+              <input type="text" id="address" name="address" autocomplete="street-address">
+            </div>
+          </div>
+
+          <div class="form-row three">
+            <div class="field">
+              <label for="city">City</label>
+              <input type="text" id="city" name="city" autocomplete="address-level2">
+            </div>
+            <div class="field">
+              <label for="state">State</label>
+              <input type="text" id="state" name="state" autocomplete="address-level1">
+            </div>
+            <div class="field">
+              <label for="zip">Zip</label>
+              <input type="text" id="zip" name="zip" autocomplete="postal-code">
+            </div>
+          </div>
+
+          <div class="form-row two">
+            <div class="field">
+              <label for="phone">Phone <span class="req">*</span></label>
+              <input type="tel" id="phone" name="phone" required autocomplete="tel" placeholder="(239) 000-0000">
+              <p class="error-msg">Please enter a valid phone number.</p>
+            </div>
+            <div class="field">
+              <label for="email">Email <span class="req">*</span></label>
               <input type="email" id="email" name="email" required autocomplete="email" placeholder="you@example.com">
               <p class="error-msg">Please enter a valid email address.</p>
             </div>
           </div>
 
+          <div class="form-row three">
+            <div class="field">
+              <label for="vessel-manufacturer">Vessel Manufacturer</label>
+              <input type="text" id="vessel-manufacturer" name="vesselManufacturer" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="vessel-model">Model</label>
+              <input type="text" id="vessel-model" name="vesselModel" autocomplete="off">
+            </div>
+            <div class="field">
+              <label for="vessel-year">Year</label>
+              <input type="text" id="vessel-year" name="vesselYear" autocomplete="off" inputmode="numeric">
+            </div>
+          </div>
+
           <div class="form-row two">
             <div class="field">
-              <label for="boat-make">Boat Make</label>
-              <input type="text" id="boat-make" name="boatMake" autocomplete="off" placeholder="e.g. Viking, Grady-White, Sea Ray">
+              <label for="length">Length</label>
+              <input type="text" id="length" name="length" autocomplete="off">
             </div>
             <div class="field">
-              <label for="boat-model">Boat Model</label>
-              <input type="text" id="boat-model" name="boatModel" autocomplete="off" placeholder="e.g. 44 Convertible">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="field">
-              <label for="engine-type">Engine Type</label>
-              <select id="engine-type" name="engineType">
-                <option value="">Select engine type&hellip;</option>
-                <option value="diesel-inboard">Diesel Inboard</option>
-                <option value="outboard">Outboard</option>
-                <option value="sterndrive">Sterndrive (I/O)</option>
-                <option value="generator">Generator Only</option>
-                <option value="other">Other / Not Sure</option>
-              </select>
+              <label for="hull-number">Hull #</label>
+              <input type="text" id="hull-number" name="hullNumber" autocomplete="off">
             </div>
           </div>
 
           <div class="form-row">
             <div class="field">
-              <label for="issue">Description of Issue <span class="req">*</span></label>
+              <label for="vessel-location">Location of Vessel</label>
+              <input type="text" id="vessel-location" name="vesselLocation" autocomplete="off" placeholder="e.g. marina name and slip number">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="issue">Description of Problem/Work Request <span class="req">*</span></label>
               <textarea id="issue" name="issue" required placeholder="Tell us what's happening with your vessel&hellip;"></textarea>
               <p class="error-msg">Please provide a few details (at least 10 characters).</p>
             </div>
@@ -134,11 +175,11 @@
           </div>
           <div class="info-item">
             <span class="card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"/><path d="m4 6 8 7 8-7"/></svg></span>
-            <div><h4>Email</h4><a href="mailto:flyingyacht@aol.com">flyingyacht@aol.com</a></div>
+            <div><h4>Email</h4><a href="mailto:JosephPmuia@gmail.com">JosephPmuia@gmail.com</a></div>
           </div>
           <div class="info-item">
             <span class="card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
-            <div><h4>Shop Address</h4><p>4546 Orange Grove Blvd<br>North Fort Myers, FL 33903</p></div>
+            <div><h4>Shop Address</h4><p>17839 Courtside Landings Circle<br>Punta Gorda, FL 33955</p></div>
           </div>
           <div class="info-item">
             <span class="card-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg></span>
@@ -148,7 +189,7 @@
 
         <div class="map-frame" style="margin-top:28px;">
           <iframe
-            src="https://www.google.com/maps?q=4546+Orange+Grove+Blvd,+North+Fort+Myers,+FL+33903&output=embed"
+            src="https://www.google.com/maps?q=17839+Courtside+Landings+Circle,+Punta+Gorda,+FL+33955&output=embed"
             title="Universal Marine Service shop location"
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
@@ -194,9 +235,9 @@
       <div>
         <h4>Contact</h4>
         <ul>
-          <li>4546 Orange Grove Blvd<br>North Fort Myers, FL 33903</li>
+          <li>17839 Courtside Landings Circle<br>Punta Gorda, FL 33955</li>
           <li><a href="tel:+12392461618">239-246-1618</a></li>
-          <li><a href="mailto:flyingyacht@aol.com">flyingyacht@aol.com</a></li>
+          <li><a href="mailto:JosephPmuia@gmail.com">JosephPmuia@gmail.com</a></li>
           <li>Mon&ndash;Fri: 8:00 AM &ndash; 5:00 PM<br>Sat: By Appointment</li>
         </ul>
       </div>
@@ -210,7 +251,7 @@
 
 <div class="mobile-call-bar">
   <a href="tel:+12392461618" class="call">Call Now</a>
-  <a href="contact.html" class="request">Request Service</a>
+  <a href="contact.html#request-form" class="request">Request Service</a>
 </div>
 
 <script src="js/main.js"></script>
