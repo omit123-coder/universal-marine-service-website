@@ -1,229 +1,253 @@
-/* Universal Marine Service — main.js */
+/* Universal Marine Service — site scripts
+   Mobile nav, image fallbacks, scroll reveal, gallery filters/lightbox, request form. */
 (function () {
-  "use strict";
+  'use strict';
 
-  /* ---------- Mobile navigation ---------- */
-  var toggle = document.querySelector(".nav-toggle");
-  var nav = document.querySelector(".main-nav");
+  /* ---------- Footer year ---------- */
+  var year = document.getElementById('year');
+  if (year) year.textContent = new Date().getFullYear();
+
+  /* ---------- Mobile nav ---------- */
+  var toggle = document.querySelector('.nav-toggle');
+  var nav = document.getElementById('main-nav');
+
+  function setNav(open) {
+    if (!toggle || !nav) return;
+    nav.classList.toggle('open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
 
   if (toggle && nav) {
-    toggle.addEventListener("click", function () {
-      var isOpen = nav.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-      document.body.style.overflow = isOpen ? "hidden" : "";
+    toggle.addEventListener('click', function () {
+      setNav(!nav.classList.contains('open'));
     });
-
-    nav.querySelectorAll("a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        nav.classList.remove("open");
-        toggle.setAttribute("aria-expanded", "false");
-        document.body.style.overflow = "";
-      });
+    nav.addEventListener('click', function (e) {
+      if (e.target.closest('a')) setNav(false);
     });
-
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && nav.classList.contains("open")) {
-        nav.classList.remove("open");
-        toggle.setAttribute("aria-expanded", "false");
-        document.body.style.overflow = "";
-      }
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setNav(false);
     });
   }
 
-  /* ---------- Active nav link highlighting ---------- */
-  (function highlightActiveNav() {
-    var current = (location.pathname.split("/").pop() || "index.html");
-    document.querySelectorAll(".nav-list a").forEach(function (link) {
-      var href = link.getAttribute("href");
-      if (href === current || (current === "" && href === "index.html")) {
-        link.classList.add("active");
-        link.setAttribute("aria-current", "page");
-      }
-    });
-  })();
-
-  /* ---------- Header shadow on scroll ---------- */
-  var header = document.querySelector(".site-header");
-  if (header) {
-    var onScroll = function () {
-      header.style.boxShadow = window.scrollY > 8 ? "0 6px 20px rgba(0,0,0,0.25)" : "none";
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-  }
-
-  /* ---------- Reveal on scroll ---------- */
-  var revealEls = document.querySelectorAll(".reveal");
-  if ("IntersectionObserver" in window && revealEls.length) {
-    var io = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("in-view");
-            io.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-    );
-    revealEls.forEach(function (el) { io.observe(el); });
-  } else {
-    revealEls.forEach(function (el) { el.classList.add("in-view"); });
-  }
-
-  /* ---------- Image fallback: gracefully handle missing photography ---------- */
-  document.querySelectorAll(".media img").forEach(function (img) {
-    var wrapper = img.closest(".media");
-    if (!wrapper) return;
-    img.addEventListener("error", function () {
-      wrapper.classList.add("img-fallback");
-    });
-    if (img.complete && img.naturalWidth === 0) {
-      wrapper.classList.add("img-fallback");
+  /* ---------- Current-page nav link ---------- */
+  var page = window.location.pathname.split('/').pop() || 'index.html';
+  document.querySelectorAll('.nav-list a').forEach(function (link) {
+    if (link.getAttribute('href') === page) {
+      link.classList.add('active');
+      link.setAttribute('aria-current', 'page');
     }
   });
 
-  /* ---------- Contact / Request-Service form (PHP mail handler) ---------- */
-  var form = document.getElementById("service-request-form");
-  if (form) {
-    var successBox = document.getElementById("form-success");
+  /* ---------- Smooth scroll for same-page anchors ---------- */
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest('a[href^="#"]');
+    if (!link) return;
+    var id = link.getAttribute('href').slice(1);
+    var target = id && document.getElementById(id);
+    if (!target) return;
+    e.preventDefault();
+    target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    history.replaceState(null, '', '#' + id);
+  });
 
-    var validators = {
-      customerName: function (v) { return v.trim().length >= 2; },
-      phone: function (v) { return /^[0-9()+\-.\s]{7,20}$/.test(v.trim()); },
-      email: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); },
-      issue: function (v) { return v.trim().length >= 10; }
-    };
+  /* ---------- Image fallback (styled placeholder when a photo is missing) ---------- */
+  function markFallback(img) {
+    var media = img.closest('.media');
+    if (media) media.classList.add('img-fallback');
+  }
+  function clearFallback(img) {
+    var media = img.closest('.media');
+    if (media) media.classList.remove('img-fallback');
+  }
+  document.querySelectorAll('.media img').forEach(function (img) {
+    img.addEventListener('error', function () { markFallback(img); });
+    img.addEventListener('load', function () { clearFallback(img); });
+    if (img.getAttribute('src') && img.complete && img.naturalWidth === 0) markFallback(img);
+  });
 
-    function setError(field, show) {
-      var wrap = field.closest(".field");
-      if (!wrap) return;
-      wrap.classList.toggle("has-error", show);
-      field.setAttribute("aria-invalid", show ? "true" : "false");
-    }
-
-    function validateField(field) {
-      if (field.type === "checkbox") {
-        var checkOk = !field.hasAttribute("required") || field.checked;
-        setError(field, !checkOk);
-        return checkOk;
-      }
-      var rule = validators[field.name];
-      if (!rule) {
-        if (field.hasAttribute("required")) {
-          var ok = field.value.trim().length > 0;
-          setError(field, !ok);
-          return ok;
+  /* ---------- Scroll reveal ---------- */
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
         }
-        return true;
-      }
-      var ok2 = rule(field.value);
-      setError(field, !ok2);
-      return ok2;
-    }
-
-    Array.prototype.forEach.call(form.elements, function (field) {
-      if (!field.name) return;
-      field.addEventListener("blur", function () { validateField(field); });
-      field.addEventListener("input", function () {
-        var wrap = field.closest(".field");
-        if (wrap && wrap.classList.contains("has-error")) validateField(field);
       });
-    });
-
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var valid = true;
-      Array.prototype.forEach.call(form.elements, function (field) {
-        if (!field.name || field.type === "submit") return;
-        if (!validateField(field)) valid = false;
-      });
-
-      if (!valid) {
-        var firstError = form.querySelector(".has-error input, .has-error select, .has-error textarea");
-        if (firstError) firstError.focus();
-        return;
-      }
-
-      var submitBtn = form.querySelector("button[type=submit]");
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = "Submitting…"; }
-
-      fetch(form.getAttribute("action"), {
-        method: "POST",
-        body: new FormData(form)
-      })
-        .then(function (response) { return response.json().then(function (data) { return { ok: response.ok, data: data }; }); })
-        .then(function (result) {
-          if (!result.ok || !result.data.success) throw new Error("Submission failed");
-          form.style.display = "none";
-          if (successBox) {
-            successBox.classList.add("show");
-            successBox.scrollIntoView({ behavior: "smooth", block: "center" });
-          }
-        })
-        .catch(function () {
-          if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = "Submit Service Request"; }
-          alert("Sorry, something went wrong submitting your request. Please call or email us directly.");
-        });
-    });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    reveals.forEach(function (el) { observer.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('in-view'); });
   }
 
   /* ---------- Gallery filters ---------- */
-  var filterBar = document.querySelector(".gallery-filters");
-  if (filterBar) {
-    var items = document.querySelectorAll(".gallery-item");
-    filterBar.querySelectorAll(".filter-btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        filterBar.querySelectorAll(".filter-btn").forEach(function (b) { b.classList.remove("active"); });
-        btn.classList.add("active");
-        var cat = btn.getAttribute("data-filter");
-        items.forEach(function (item) {
-          var match = cat === "all" || item.getAttribute("data-category") === cat;
-          item.style.display = match ? "" : "none";
-        });
+  var filterBtns = document.querySelectorAll('.filter-btn');
+  var galleryItems = document.querySelectorAll('.gallery-item');
+  filterBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var filter = btn.getAttribute('data-filter');
+      filterBtns.forEach(function (b) { b.classList.toggle('active', b === btn); });
+      galleryItems.forEach(function (item) {
+        var show = filter === 'all' || item.getAttribute('data-category') === filter;
+        item.style.display = show ? '' : 'none';
       });
     });
-  }
+  });
 
-  /* ---------- Lightbox ---------- */
-  var lightbox = document.querySelector(".lightbox");
-  if (lightbox) {
-    var lbImg = lightbox.querySelector("img");
-    var lbCaption = lightbox.querySelector("figcaption");
-    var lbMedia = lightbox.querySelector(".media");
+  /* ---------- Gallery lightbox ---------- */
+  var lightbox = document.querySelector('.lightbox');
+  if (lightbox && galleryItems.length) {
+    var lbMedia = lightbox.querySelector('.media');
+    var lbImg = lightbox.querySelector('img');
+    var lbCaption = lightbox.querySelector('figcaption');
+    var lbClose = lightbox.querySelector('.lightbox-close');
+    var lastFocus = null;
 
-    document.querySelectorAll(".gallery-item .media").forEach(function (media) {
-      media.addEventListener("click", function () {
-        var img = media.querySelector("img");
-        var label = media.getAttribute("data-label") || "";
-        lightbox.classList.add("open");
-        lbMedia.classList.toggle("img-fallback", media.classList.contains("img-fallback"));
-        lbMedia.setAttribute("data-label", label);
-        if (lbImg && img) {
-          lbImg.src = img.getAttribute("src");
-          lbImg.alt = img.getAttribute("alt") || "";
+    var openLightbox = function (item) {
+      var media = item.querySelector('.media');
+      var img = item.querySelector('img');
+      var label = media ? media.getAttribute('data-label') || '' : '';
+      lbMedia.classList.remove('img-fallback');
+      lbMedia.setAttribute('data-label', label);
+      lbImg.src = img.getAttribute('src');
+      lbImg.alt = img.getAttribute('alt') || label;
+      lbCaption.textContent = label;
+      lastFocus = document.activeElement;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      lbClose.focus();
+    };
+
+    var closeLightbox = function () {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+      if (lastFocus) lastFocus.focus();
+    };
+
+    galleryItems.forEach(function (item) {
+      item.setAttribute('tabindex', '0');
+      item.setAttribute('role', 'button');
+      item.style.cursor = 'pointer';
+      item.addEventListener('click', function () { openLightbox(item); });
+      item.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(item);
         }
-        if (lbCaption) lbCaption.textContent = label;
-        document.body.style.overflow = "hidden";
       });
     });
 
-    function closeLightbox() {
-      lightbox.classList.remove("open");
-      document.body.style.overflow = "";
-    }
-
-    lightbox.addEventListener("click", function (e) {
+    lbClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function (e) {
       if (e.target === lightbox) closeLightbox();
     });
-    var closeBtn = lightbox.querySelector(".lightbox-close");
-    if (closeBtn) closeBtn.addEventListener("click", closeLightbox);
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape") closeLightbox();
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
     });
   }
 
-  /* ---------- Auto-update copyright year ---------- */
-  var yearEl = document.getElementById("year");
-  if (yearEl) yearEl.textContent = new Date().getFullYear();
+  /* ---------- Request Service form ---------- */
+  // Rules mirror the server-side checks in send-request.php.
+  var validators = {
+    customerName: function (v) { return v.length >= 2; },
+    phone: function (v) { return /^[0-9()+\-.\s]{7,20}$/.test(v); },
+    email: function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); },
+    issue: function (v) { return v.length >= 10; }
+  };
+
+  var form = document.getElementById('service-request-form');
+  if (form) {
+    var success = document.getElementById('form-success');
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var submitLabel = submitBtn ? submitBtn.textContent : '';
+
+    var serverError = document.createElement('p');
+    serverError.className = 'form-note';
+    serverError.style.color = '#d64545';
+    serverError.setAttribute('role', 'alert');
+    serverError.hidden = true;
+    if (submitBtn) submitBtn.insertAdjacentElement('afterend', serverError);
+
+    var setFieldError = function (input, hasError) {
+      var field = input.closest('.field');
+      if (field) field.classList.toggle('has-error', hasError);
+      input.classList.toggle('invalid', hasError);
+      input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
+    };
+
+    var validateField = function (name) {
+      var input = form.elements[name];
+      if (!input) return true;
+      var ok = validators[name](input.value.trim());
+      setFieldError(input, !ok);
+      return ok;
+    };
+
+    Object.keys(validators).forEach(function (name) {
+      var input = form.elements[name];
+      if (!input) return;
+      input.addEventListener('blur', function () { validateField(name); });
+      input.addEventListener('input', function () {
+        if (input.classList.contains('invalid')) validateField(name);
+      });
+    });
+
+    var showServerError = function () {
+      serverError.textContent = 'Sorry, something went wrong sending your request. Please try again or call us at 239-246-1618.';
+      serverError.hidden = false;
+    };
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      serverError.hidden = true;
+      if (success) success.classList.remove('show');
+
+      var firstInvalid = null;
+      Object.keys(validators).forEach(function (name) {
+        if (!validateField(name) && !firstInvalid) firstInvalid = form.elements[name];
+      });
+      if (firstInvalid) {
+        firstInvalid.focus();
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending…';
+      }
+
+      fetch(form.getAttribute('action'), { method: 'POST', body: new FormData(form) })
+        .then(function (res) {
+          return res.json().then(function (data) { return { ok: res.ok, data: data }; });
+        })
+        .then(function (result) {
+          if (result.ok && result.data.success) {
+            form.reset();
+            if (success) {
+              success.classList.add('show');
+              success.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+            }
+            return;
+          }
+          var fields = (result.data.errors || []).filter(function (name) { return validators[name]; });
+          if (!fields.length) {
+            showServerError();
+            return;
+          }
+          fields.forEach(function (name) {
+            if (form.elements[name]) setFieldError(form.elements[name], true);
+          });
+          form.elements[fields[0]].focus();
+        })
+        .catch(showServerError)
+        .then(function () {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = submitLabel;
+          }
+        });
+    });
+  }
 })();
